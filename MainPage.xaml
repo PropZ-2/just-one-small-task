@@ -1,0 +1,43 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             x:Class="just_one_small_task.MainPage">
+
+
+        <VerticalStackLayout
+            BackgroundColor="White"
+            Padding="30,0"
+            Spacing="25">
+            <Image
+                Source="little_lord.png"
+                HeightRequest="185"
+                Aspect="AspectFit"
+                SemanticProperties.Description="dot net bot in a hovercraft number nine" />
+
+            <Label
+                TextColor="Black"
+                Text="Hello would you like to do me a small favor?"
+                Style="{StaticResource Headline}"
+                SemanticProperties.HeadingLevel="Level1" />
+
+            <Label
+                TextColor="Black"
+                Text="I'll just need you do something simple for me &#10; Are you ready?"
+                Style="{StaticResource SubHeadline}"
+                SemanticProperties.HeadingLevel="Level2"
+                SemanticProperties.Description="I'll just need you do something simple for me Are you ready?" />
+
+            <Button
+                x:Name="StartMainPageBtn"
+                TextColor="Black"
+                FontSize="22"
+                FontAttributes="Bold"
+                Text="Start tasks" 
+                BackgroundColor="PaleVioletRed"
+                WidthRequest="260"
+                SemanticProperties.Hint="Start's the game"
+                Clicked="StarGameClicked" />
+        </VerticalStackLayout>
+
+
+</ContentPage>

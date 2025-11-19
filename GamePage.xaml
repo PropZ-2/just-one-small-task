@@ -1,0 +1,100 @@
+<ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             x:Class="just_one_small_task.GamePage"
+             Title="">
+
+    <Grid Padding="120" BackgroundColor="PapayaWhip" >
+        
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto" />
+            <RowDefinition Height="Auto" />
+            <RowDefinition Height="120" />
+            <RowDefinition Height="Auto" />
+        </Grid.RowDefinitions>
+
+        <Label
+            x:Name="PlayerCountLabel"
+            Text="How many people are playing?"
+            HorizontalTextAlignment="Center"
+            FontSize="24"
+            TextColor="Black"
+            Grid.Row="0" />
+
+        <Label
+            x:Name="PlayerCountTip"
+            Text="Recommended amount is 4-8 players but it can work with more"
+            HorizontalTextAlignment="Center"
+            FontSize="20"
+            TextColor="Black"
+            Grid.Row="1" />
+
+        <Picker
+            x:Name="PlayerCountPicker"
+            VerticalOptions="Center"
+            HeightRequest="60"
+            WidthRequest="250"
+            BackgroundColor="PaleVioletRed"
+            HorizontalTextAlignment="Center"
+            SelectedIndexChanged="PlayerCountPicker_SelectedIndexChanged"
+            FontSize="24"
+            TextColor="Black"
+            Grid.Row="2" 
+            SemanticProperties.Hint="how many players are selected"/>
+
+        <Button
+            x:Name="StartGameButton"
+            Text="Start"
+            FontSize="22"
+            FontAttributes="Bold"
+            TextColor="Black"
+            BackgroundColor="PaleVioletRed"
+            WidthRequest="200"
+            HeightRequest="60"
+            HorizontalOptions="Center"
+            Clicked="StartGameButton_Clicked"
+            SemanticProperties.Hint="proceeds to start the game"
+            Grid.Row="3" />
+
+        <!-- Card container overlays the existing UI when visible -->
+        <Grid x:Name="CardContainer" IsVisible="False" RowSpacing="20" Grid.RowSpan="4">
+            <Grid.RowDefinitions>
+                <RowDefinition Height="*" />
+                <RowDefinition Height="Auto" />
+            </Grid.RowDefinitions>
+
+            <!-- Stack to hold player label and the card frame -->
+            <StackLayout Grid.Row="0" HorizontalOptions="Center" VerticalOptions="Center" Spacing="10">
+                <Label x:Name="PlayerTurnLabel" Text="" FontSize="18" TextColor="Black" HorizontalTextAlignment="Center" />
+
+                <Frame
+                    x:Name="CardFrame"
+                    BackgroundColor="White"
+                    CornerRadius="16"
+                    Padding="20"
+                    HasShadow="True"
+                    HorizontalOptions="Center"
+                    VerticalOptions="Center"
+                    WidthRequest="360"
+                    HeightRequest="360">
+
+                    <ScrollView>
+                        <Label
+                            x:Name="CardTextLabel"
+                            Text=""
+                            FontSize="20"
+                            TextColor="Black"
+                            HorizontalTextAlignment="Center"
+                            VerticalTextAlignment="Center"/>
+                    </ScrollView>
+                </Frame>
+            </StackLayout>
+
+            <StackLayout Grid.Row="1" Orientation="Horizontal" HorizontalOptions="Center" Spacing="20">
+                <Button x:Name="PrevCardButton" Text="Previous" Clicked="PrevCardButton_Clicked" WidthRequest="120" HeightRequest="50" />
+                <Button x:Name="NextCardButton" Text="Next" Clicked="NextCardButton_Clicked" WidthRequest="120" HeightRequest="50" />
+            </StackLayout>
+        </Grid>
+
+    </Grid>
+    
+</ContentPage>
