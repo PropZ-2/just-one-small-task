@@ -1,5 +1,8 @@
 using System;
 using System.Collections.Generic;
+using System.IO;
+using System.Text.Json;
+using System.Threading.Tasks;
 
 namespace just_one_small_task;
 
@@ -7,27 +10,9 @@ public partial class GamePage : ContentPage
 {
 	public int PlayerCount;
 
-	// Simple in-memory list of cards. Each card is just a string for now.
-	private List<string> _cards = new List<string>
-	{
-		"Card 1: You are now the DJ, play something awful in a non pop gerner for the next 10-15 minuits",
-		"Card 2: Spil a bunch of water on your shirt",
-		"Card 3: Give the previous player a simple fetch quest limited to 1 item",
-		"Card 4: Swap shirts or pants or jacket with next player",
-		"Card 5: Swap seats and player number and name with someone",
-		"Card 6: You must only speak Thai from now on until someone says 'i will here by free you of your struggle' and kisses you on the cheeck",
-		"Card 7: Act like an animal of the player infront of you's choise",
-		"Card 8: If any make up is avaible another player of your choise will apply it to you, if thier is non avaible you have to go wash your face every 5 minuite",
-		"Card 9: Imitate a fictional character of the previouse player's choise that you both know of",
-		"Card 10: lick a wall or table or a chair",
-		"Card 11: eat a bit of toilet papir",
-		"Card 12: try to convince someone to suck on your finger within 1 min if you fail you have to sit on the floor",
-		"Card 13: in 10 secounds the floor is will be lava for all players first one to touch the floor will have to moan after every sentence",
-        "Card 14: next player get call one of your friend, if they pick up they have to keep talking for 1 min or you both have to swap names who ever reacts to thier old name first have to change the profile picture on a social media to 'penis cat meme' for a week (look it up it's the cat with penis shape on it's face)",
-		"Card 15: change your wall paper to a picture of someone else for the rest of the week",
-		"Card 16: "
-    };
-
+	// Cards will be loaded lazily from Resources/Raw/cards.json
+	private List<string>? _cards;
+	
 	private int _currentCardIndex = -1;
 	private readonly Random _rng = new Random();
 
@@ -62,7 +47,7 @@ public partial class GamePage : ContentPage
 	}
 
 	// Start the game: hide the initial controls and show the card container with first card
-	private void StartGameButton_Clicked(object? sender, EventArgs e)
+	private async void StartGameButton_Clicked(object? sender, EventArgs e)
 	{
 		// hide initial UI controls
 		var playerLabel = this.FindByName<Label>("PlayerCountLabel");
@@ -80,12 +65,33 @@ public partial class GamePage : ContentPage
 		var cardContainer = this.FindByName<Grid>("CardContainer");
 		if (cardContainer != null) cardContainer.IsVisible = true;
 
-		// randomize cards before starting
-		ShuffleCards();
+		// show loading indicator while cards load
+		var loader = this.FindByName<ActivityIndicator>("CardsLoadingIndicator");
+		if (loader != null)
+		{
+			loader.IsVisible = true;
+			loader.IsRunning = true;
+		}
 
-		// start at first card
-		_currentCardIndex = 0;
-		UpdateCardUi();
+		try
+		{
+			await EnsureCardsLoadedAsync();
+
+			// randomize cards before starting (shuffle after load)
+			ShuffleCards();
+
+			// start at first card
+			_currentCardIndex = 0;
+			UpdateCardUi();
+		}
+		finally
+		{
+			if (loader != null)
+			{
+				loader.IsRunning = false;
+				loader.IsVisible = false;
+			}
+		}
 	}
 
 	private void PrevCardButton_Clicked(object? sender, EventArgs e)
@@ -99,6 +105,7 @@ public partial class GamePage : ContentPage
 
 	private void NextCardButton_Clicked(object? sender, EventArgs e)
 	{
+		if (_cards == null) return;
 		if (_currentCardIndex < _cards.Count - 1)
 		{
 			_currentCardIndex++;
@@ -116,7 +123,7 @@ public partial class GamePage : ContentPage
 		// ensure at least 1 player to avoid division by zero or negative
 		int players = Math.Max(1, PlayerCount);
 
-		if (_currentCardIndex >= 0 && _currentCardIndex < _cards.Count)
+		if (_cards != null && _currentCardIndex >= 0 && _currentCardIndex < _cards.Count)
 		{
 			// compute current player number (1-based). Cycle through players as cards progress.
 			int playerNumber = (_currentCardIndex % players) + 1;
@@ -138,6 +145,8 @@ public partial class GamePage : ContentPage
 	// Fisher–Yates shuffle to randomize the _cards list in-place
 	private void ShuffleCards()
 	{
+		if (_cards == null || _cards.Count <= 1) return;
+
 		for (int i = _cards.Count - 1; i > 0; i--)
 		{
 			int j = _rng.Next(i + 1);
@@ -145,6 +154,26 @@ public partial class GamePage : ContentPage
 			var tmp = _cards[i];
 			_cards[i] = _cards[j];
 			_cards[j] = tmp;
+		}
+	}
+
+	private async Task EnsureCardsLoadedAsync()
+	{
+		if (_cards != null) return;
+
+		// Load cards.json from app package (Resources/Raw)
+		try
+		{
+			using var stream = await FileSystem.OpenAppPackageFileAsync("cards.json");
+			using var sr = new StreamReader(stream);
+			var json = await sr.ReadToEndAsync();
+			_cards = JsonSerializer.Deserialize<List<string>>(json) ?? new List<string>();
+		}
+		catch (Exception ex)
+		{
+			// fallback to empty list on error
+			_cards = new List<string>();
+			Console.WriteLine($"Failed to load cards.json: {ex}");
 		}
 	}
 
