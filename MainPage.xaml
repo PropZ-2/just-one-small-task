@@ -12,7 +12,7 @@
                 Source="little_lord.png"
                 HeightRequest="185"
                 Aspect="AspectFit"
-                SemanticProperties.Description="dot net bot in a hovercraft number nine" />
+                SemanticProperties.Description="the little lord" />
 
             <Label
                 TextColor="Black"
@@ -27,7 +27,14 @@
                 SemanticProperties.HeadingLevel="Level2"
                 SemanticProperties.Description="I'll just need you do something simple for me Are you ready?" />
 
-            <Button
+            <Label
+                TextColor="Black"
+                Text="Keep in mind this is all just a game and non if this to be taken serious and it's all just fun and games, &#10; so please be very kind and respectful to others"
+                Style="{StaticResource SubHeadline}"
+                SemanticProperties.HeadingLevel="Level3"
+                SemanticProperties.Description="Keep in mind this is all just a game and non if this to be taken serious and it's all just fun and games, so please be very kind and respectful to others" />
+
+        <Button
                 x:Name="StartMainPageBtn"
                 TextColor="Black"
                 FontSize="22"

@@ -22,7 +22,7 @@
 
         <Label
             x:Name="PlayerCountTip"
-            Text="Recommended amount is 4-8 players but it can work with more"
+            Text="Recommended amount is 4-8 players but it can work with more &#10; if you don't wanna do the task everyone in group can come up with alternative to wanting to skip cards"
             HorizontalTextAlignment="Center"
             FontSize="20"
             TextColor="Black"
