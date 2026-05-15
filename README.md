@@ -7,7 +7,7 @@ you can  try it out using dotnet maui.
 
 if you want you can make your own version i don't really care, all of the cards are in a json file so it's fairliy easy to edit for yourself.
 
-keep in mind all of this is a joke and is not ment to be taken serious, and please nice and respectful to other people
+keep in mind all of this is a joke and is not ment to be taken serious, and please be nice and respectful to other people, we are all here just to have fun.
 
 
 future plans,: 
